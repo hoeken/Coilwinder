@@ -3,7 +3,7 @@ module track()
 	$fs = 0.1;
 	
 	wall = 5;
-	length = 60;
+	length = 80;
 	width = wall*5;
 	crossBarDia = length-2;
 	height = 25;
@@ -11,6 +11,15 @@ module track()
 	bolt = 3.5;
 	fudge = 0.25;
 	bump = 5;
+
+	x1 = -wall;
+	y1 = wall;
+	x2 = -wall;
+	y2 = length-wall;
+	x3 = width+wall;
+	y3 = length-wall;
+	x4 = width+wall;
+	y4 = wall;
 
 	difference()
 	{
@@ -23,12 +32,14 @@ module track()
 			cube([width, length, wall]);
 			
 			//bumps as guide railing
+			/*
 			translate([wall*0.75, length, (height-wall)/2+wall])
 				rotate([90, 0, 0])
 					cylinder(r=bump/2, h=length);
 			translate([width-wall*0.75, length, (height-wall)/2+wall])
 				rotate([90, 0, 0])
 					cylinder(r=bump/2, h=length);
+			*/
 				
 			//flanges for mounting.
 			translate([-wall, 0, 0])
@@ -58,14 +69,20 @@ module track()
 		}
 
 		//bolt heads for flange
-		translate([-wall, wall, -1])
+		translate([x1, y1, -1])
 			cylinder(r=bolt/2, h=wall+2);
-		translate([-wall, length-wall, -1])
+		translate([x2, y2, -1])
 			cylinder(r=bolt/2, h=wall+2);
-		translate([width+wall, length-wall, -1])
+		translate([x3, y3, -1])
 			cylinder(r=bolt/2, h=wall+2);
-		translate([width+wall, wall, -1])
+		translate([x4, y4, -1])
 			cylinder(r=bolt/2, h=wall+2);
+		
+		//these are our hole placements.
+		echo(x1, y1);
+		echo(x2, y2);
+		echo(x3, y3);
+		echo(x4, y4);
 		
 		//tiny slices for path simplification.
 		translate([-wall*2, wall, wall/2])
@@ -79,14 +96,14 @@ module track()
 	}
 }
 
-module carrier()
+module carriage()
 {
 	$fs = 0.1;
 	
 	wall = 5;
 	bump = 5;
 	width = wall*3;
-	length = wall*2;
+	length = wall*4;
 	height = 30;
 	
 	difference()
@@ -94,6 +111,7 @@ module carrier()
 		//our main body
 		cube([width, length, height]);
 		
+		/*
 		//indents for guide railing
 		translate([-wall*0.25, length+1, 25/2-bump/2])
 			rotate([90, 0, 0])
@@ -101,6 +119,7 @@ module carrier()
 		translate([width+wall*0.25, length+1, 25/2-bump/2])
 			rotate([90, 0, 0])
 				cylinder(r=bump/2, h=length+2);
+		*/
 		
 		//hole for the drive shaft
 		translate([width/2, length+1, 20])
@@ -115,11 +134,11 @@ module carrier()
 		//hole for the wire
 		translate([-1, length/2, height-wall])
 			rotate([90, 0, 90])
-				cylinder(r=1, h=length+2);
+				#cylinder(r=1, h=width+2);
 				
 	}
 }
 
 track();
 translate([5, -5, 5])
-	carrier();
+	carriage();
