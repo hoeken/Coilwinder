@@ -129,16 +129,6 @@ module nema_17_mount()
 					translate([-frame_width, 0, -frame_width*2])
 						cube(size=[frame_width*4, frame_width*2, frame_width*4]);
 
-			//front anti-warp circle
-			translate([frame_width/2, wall_thickness*1.25, 0])
-				rotate([90, 0, 0])
-					cylinder(r=wall_thickness, h=wall_thickness*2);
-
-			//middle anti-warp circle			
-			translate([0, motor_width/2 + wall_thickness, 0])
-				rotate([0, 90, 0])
-					cylinder(r=wall_thickness, h=frame_width+1);
-
 			//cutout / tidy up cubes.
 			translate([wall_thickness, wall_thickness-0.1, -1])
 				cube([frame_width-wall_thickness*2, frame_width-wall_thickness, motor_width*2]);
