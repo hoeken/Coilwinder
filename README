@@ -1,1 +1,7 @@
 This is an open source hardware project to build a simple, 3D printable coil winding machine.  Coils are useful in all sorts of different electronics:  motors, generators, transformers, speakers and more things that I probably don't even know about.  This is a project that I'm interested in just to see if I can do it, but hopefully it will be useful to someone else out there.
+
+This project was designed using mostly OpenSCAD[1], and a bit of QCad[2].  It is intended to be printed on a 3D printer such as the MakerBot[3].
+
+[1] http://www.openscad.org
+[2] http://www.qcad.org
+[3] http://www.makerbot.com
