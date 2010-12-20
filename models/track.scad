@@ -86,7 +86,7 @@ module carrier()
 	wall = 5;
 	bump = 5;
 	width = wall*3;
-	length = wall*3;
+	length = wall*2;
 	height = 30;
 	
 	difference()
