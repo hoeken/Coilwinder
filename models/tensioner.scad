@@ -1,4 +1,4 @@
-module tensioner()
+module tensioner(dxf = false)
 {
 	$fs = 0.1;
 	
@@ -7,13 +7,36 @@ module tensioner()
 	width = wall*3;
 	crossBarDia = thick-2;
 	height = wall*4 + (wall+crossBarDia/2) * 4;
-
+	realBolt = 3;
 	bolt = 4;
 	fudge = 0.25;
-
-	//center it.
-//	translate([-width/2, 0, 0])
 	
+	x1 = -bolt*1.5;
+	y1 = thick/2;
+	x2 = width+bolt*1.5;
+	y2 = thick/2;
+
+	if (dxf)
+	{
+		difference()
+		{
+			union()
+			{
+				translate([x1, y1, 0])
+					circle(r=thick/2, center=true);
+				translate([-thick/2, 0, 0])
+					square([width+thick, thick]);
+				translate([x2, y2, 0])
+					circle(r=thick/2, center=true);
+			}
+			
+			translate([x1, y1, 0])
+				circle(r=realBolt/2, center=true);
+				translate([x2, y2, 0])
+				circle(r=realBolt/2, center=true);
+		}
+	}
+	else
 	{
 		difference()
 		{
@@ -57,16 +80,16 @@ module tensioner()
 				//flanges for mounting.
 				translate([-bolt*1.5, 0, 0])
 					cube([width+bolt*3, thick, wall]);
-				translate([-bolt*1.5, thick/2, 0])
+				translate([x1, y1, 0])
 					cylinder(r=thick/2, h=wall);
-				translate([width+bolt*1.5, thick/2, 0])
+				translate([x2, y2, 0])
 					cylinder(r=thick/2, h=wall);
 			}
 
 			//bolt heads for flange
-			translate([-bolt*1.5, thick/2, -1])
+			translate([x1, y1, -1])
 				#cylinder(r=bolt/2, h=wall+2);
-			translate([width+bolt*1.5, thick/2, -1])
+			translate([x2, y2, -1])
 				#cylinder(r=bolt/2, h=wall+2);
 			
 			//tiny slices for path simplification.
@@ -79,3 +102,4 @@ module tensioner()
 }
 
 tensioner();
+//tensioner(true);

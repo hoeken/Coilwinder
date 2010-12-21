@@ -1,4 +1,4 @@
-module spool_holder()
+module spool_holder(dxf = false)
 {
 	$fs = 0.1;
 	
@@ -11,12 +11,36 @@ module spool_holder()
 	width = spoolID + wall*2;
 	height = wall + spoolOD / 2 + spoolID-rodOD;
 
+	realBolt = 3;
 	bolt = 4;
 	fudge = 0.25;
 
-	//center it.
-//	translate([-width/2, 0, 0])
-	
+	x1 = -bolt*2;
+	y1 = thick/2;
+	x2 = width+bolt*2;
+	y2 = thick/2;
+
+	if (dxf)
+	{
+		difference()
+		{
+			union()
+			{
+				translate([x1, y1, 0])
+					circle(r=thick/2, center=true);
+				translate([-thick/2, 0, 0])
+					square([width+thick, thick]);
+				translate([x2, y2, 0])
+					circle(r=thick/2, center=true);
+			}
+			
+			translate([x1, y1, 0])
+				circle(r=realBolt/2, center=true);
+				translate([x2, y2, 0])
+				circle(r=realBolt/2, center=true);
+		}
+	}
+	else
 	{
 		difference()
 		{
@@ -28,26 +52,26 @@ module spool_holder()
 						cylinder(r=width/2, h=thick);
 
 				//flanges for mounting.
-				translate([-bolt*1.5, 0, 0])
-					cube([width+bolt*3, thick, wall]);
-				translate([-bolt*1.5, thick/2, 0])
+				translate([-bolt*2, 0, 0])
+					cube([width+bolt*4, thick, wall]);
+				translate([x1, y2, 0])
 					cylinder(r=thick/2, h=wall);
-				translate([width+bolt*1.5, thick/2, 0])
+				translate([x2, y2, 0])
 					cylinder(r=thick/2, h=wall);
 			}
 
 			//bolt heads for flange
-			translate([-bolt*1.5, thick/2, -1])
-				#cylinder(r=bolt/2, h=wall+2);
-			translate([width+bolt*1.5, thick/2, -1])
-				#cylinder(r=bolt/2, h=wall+2);
-			
+			translate([x1, y1, -1])
+				cylinder(r=bolt/2, h=wall+2);
+			translate([x2, y2, -1])
+				cylinder(r=bolt/2, h=wall+2);
+		
 			//tiny slices for path simplification.
-			translate([-bolt*3, thick/2, wall/2])
+			translate([x1-wall-bolt/3, thick/2, wall/2])
 				cube(size=[wall*2, 0.1, wall], center=true);
-			translate([width+bolt*3, thick/2, wall/2])
+			translate([x2+wall+bolt/3, thick/2, wall/2])
 				cube(size=[wall*2, 0.1, wall], center=true);
-				
+			
 			//hole for the spool bearing rod.
 			translate([width/2,thick+1,height])
 				rotate([90,0,0])
@@ -56,4 +80,5 @@ module spool_holder()
 	}
 }
 
+//spool_holder(true);
 spool_holder();
