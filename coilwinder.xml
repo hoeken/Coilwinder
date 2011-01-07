@@ -1,0 +1,24 @@
+<?xml version="1.1" encoding="utf-8"?>
+<machines>
+	<machine>
+		<name>Hoeken's Coilwinder</name>
+		<geometry type="cartesian">
+			<axis id="x" length="300" maxfeedrate="200" scale="2000"/> <!-- 1.8deg, 1/8 step, 0.8mm pitch = 1/((0.8/200)/8) -->
+			<axis id="y" length="10000" maxfeedrate="200" scale="1600"/> <!-- 1.8deg, 1/8 step, RPM = 200 * 8 -->
+			<axis id="z" length="300" maxfeedrate="400" scale="133.333333"/> <!-- 1.8deg, full step, 1.5mm pitch = 1/(1.5/200) -->
+		</geometry>
+		<tools>
+		</tools>
+		<clamps></clamps>
+		<driver name="sanguino3g">
+			<!-- optional: <portname>COM1</portname> -->
+			<rate>115200</rate>
+		</driver>
+		<warmup>
+		</warmup>
+		<cooldown>
+(Turn off steppers after a build.)
+M18
+		</cooldown>
+	</machine>		
+</machines>
