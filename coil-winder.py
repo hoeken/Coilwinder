@@ -83,24 +83,60 @@ class CoilWinder:
   		self.diameter = self.diametersInMM[self.awg];
   		self.windings = windings;
   		self.rpm = rpm;
+  		
+  		self.coilsPerRow = round(self.length / self.diameter)
+  		self.maxCoils = self.coilsPerRow * ceil(self.windings / self.coilsPerRow)
+  		self.minCoils = self.coilsPerRow * floor(self.windings / self.coilsPerRow)
+  		
+
 
 	def generate(self):
 	
 		direction = 1;
+		xPos = 0.0;
 		
 		"Generate the actual GCode"
 		print "(", " ".join(sys.argv), ")"
 		print "(Get psyched to automatically wind your own coils.)"
-		print
+		print "(Note: X units are in mm, Y units are in rotations, Feedrate is roughly in RPM)"
+  		print "(Winding RPM: %0.2f)" % (self.rpm)
+  		print "(Actual Coil Length: %0.2fmm)" % (self.coilsPerRow * self.diameter)
+  		print "(Wire AWG: %d)" % (self.awg)
+  		print "(Wire Diameter: %.3fmm)" % (self.diameter)
+  		print "(Windings per layer: %d)" % (self.coilsPerRow)
+  		
+  		if (self.minCoils == self.maxCoils):
+  			print "(Total Windings: %d)" % (self.windings)
+  			if (self.minCoils % 2 == 0):
+  				print "(Winding will start and stop at same end.)"
+			else:
+				print "(Winding will start and stop at opposite ends.)"
+		else:
+			print "(Warning: winding will stop in the middle of the coil.  Recommended values below.)"
+  			if (self.minCoils % 2 == 0):
+	  			print "(Smaller: %d, %d layers, start/stop on same end.)" % (self.minCoils, self.minCoils / self.coilsPerRow)
+	  			print "(Larger: %d, %d layers, start/stop on opposite ends.)" % (self.maxCoils, self.maxCoils / self.coilsPerRow)
+  			else:
+  				print "(Smaller: %d, %d layers, start/stop on opposite ends.)" % (self.minCoils, self.minCoils / self.coilsPerRow)
+  				print "(Larger: %d, %d layers, start/stop on same end.)" % (self.maxCoils, self.maxCoils / self.coilsPerRow)
+  				
 		print "G21 (metric ftw)"
 		print "G90 (absolute mode)"
 		print "G92 X0 Y0 Z0 (zero all axes)"
 
 		for i in range(self.windings):
-			print "G1 X%d F%.2f" % (i+1, self.rpm)
-			#TODO: add servo support.
-			#M300 S30 (pen down)
-			#G4 P60 (wait 60ms)
+		
+			if (xPos > self.length):
+				direction = 0;
+			elif (xPos <= 0):
+				direction = 1;
+				
+			if (direction == 1):
+				xPos += self.diameter;
+			else:
+				xPos -= self.diameter;
+				
+			print "G1 X%.3f Y%d F%.2f" % (xPos, i+1, self.rpm)
 
 		print "M18 (drives off)"
 		print "M127"
